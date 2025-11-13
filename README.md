@@ -1,7 +1,3 @@
-
-# ✅ **README.md (copy & paste into your repo)**
-
-````markdown
 # 🐉 Image Generation with OpenAI (DALL·E / GPT-Image-1)
 
 This project demonstrates how to generate images using the **OpenAI Images API** in Python.  
