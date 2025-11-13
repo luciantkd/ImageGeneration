@@ -1,136 +1,259 @@
-# 🐉 Image Generation with OpenAI (DALL·E / GPT-Image-1)
+# 🐉 Image Generation & Editing with OpenAI (DALL·E / GPT-Image-1)
 
-This project demonstrates how to generate images using the **OpenAI Images API** in Python.  
-It includes scripts for:
+This project demonstrates how to generate, vary, inpaint, and outpaint images using the **OpenAI Images API** in Python.
 
-- Generating an image from a text prompt  
-- Creating variations of an existing image  
-- Saving images locally as PNG files  
-- Loading API keys securely using a `.env` file  
+It includes:
 
-This is a clean, minimal, and practical example of building AI image workflows using Python.
+* 🖼️ Generating images from text
+* 🎭 Creating variations of existing images
+* 🎯 Inpainting with masks (tattoos, edits, selective changes)
+* 🌄 Outpainting to expand scenes
+* 🔐 Secure `.env` key loading
+* 📂 Clean directory structure for scripts & images
 
 ---
 
-## 🚀 Features
+# 🚀 Features
 
-### **1. Generate a New Image**
-- Describe anything with text  
-- OpenAI creates a PNG image in 1024×1024  
-- File is saved locally (e.g., `dragon.png`)
+### **1. Generate Images**
+
+* Simple prompt → PNG output
+* High-resolution 1024×1024
+* Uses `gpt-image-1`
 
 ### **2. Create Variations**
-- Load an existing PNG  
-- Ask the model to create stylised or modified versions  
-- Saves images such as `variation_1.png`, `variation_2.png`
 
-### **3. Secure Environment Setup**
-- No API keys stored in code  
-- `.env` file handles secrets  
-- Compatible with Python virtual environments
+* Automatically stylise an existing image
+* Produces multiple alternative looks
+
+### **3. Inpaint with Alpha Masks**
+
+* Only edit white areas in a mask
+* Used here to add dragon tattoos
+
+### **4. Outpaint (Scene Expansion)**
+
+* Expands image beyond original canvas
+* Maintains consistency & style
+
+### **5. Clean Project Structure**
+
+* All scripts in `/scripts`
+* All images in `/images`
+* API keys hidden with `.env`
 
 ---
 
-## 📦 Installation
+# 📦 Installation
 
-### 1. Clone the repository
+### **1. Clone the repository**
 
 ```bash
 git clone <your-repo-url>
 cd ImageGeneration
-````
-
-### 2. Create and activate a virtual environment
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
 ```
 
-### 3. Install dependencies
+### **2. Create & activate a virtual environment**
 
 ```bash
-pip install openai python-dotenv
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### **3. Install dependencies**
+
+```bash
+pip install openai python-dotenv pillow
 ```
 
 ---
 
-## 🔑 Environment Variables
+# 🔑 Environment Setup
 
-Create a file called `.env` in the project directory:
+Create a `.env` file:
 
 ```
-OPENAI_API_KEY=your-real-api-key-here
+OPENAI_API_KEY=your-secret-key-here
 ```
 
-⚠️ Do **not** commit your `.env` file to GitHub.
+⚠️ Never commit `.env` to GitHub.
 
 ---
 
-## 🖼️ Generate an Image
+# 🖼️ Generate a New Image
 
 Run:
 
 ```bash
-python3 generate.py
+python3 scripts/generate.py
 ```
 
-This will:
+The script will:
 
-* Send your prompt to the OpenAI Images API
-* Save the generated image as `dragon.png`
+* Send a prompt to OpenAI
+* Receive a Base64 image
+* Save it as `images/dragon.png`
 
-Example prompt used in the script:
+Example prompt:
 
 ```
-"A cute baby dragon flying over a futuristic Glasgow skyline, digital art"
+A cute baby dragon flying over a futuristic Glasgow skyline, digital art
 ```
 
 ---
 
-## 🎨 Create Variations of an Image
+# 🎨 Create Variations
 
-Ensure you have `dragon.png` (or any PNG) in the folder, then run:
+Run:
 
 ```bash
-python3 vary.py
+python3 scripts/vary.py
 ```
 
-This creates:
+Outputs:
 
 ```
-variation_1.png
-variation_2.png
+images/dragon_variation_1.png
+images/dragon_variation_2.png
 ```
-
-You can adjust the prompt inside the script to control the style and mood.
 
 ---
 
-## 📁 Project Structure
+# 📁 Project Structure
 
 ```
 ImageGeneration/
 │
-├── generate.py          # Create a brand new image from a text prompt
-├── vary.py              # Create variations of an existing PNG image
-├── dragon.png           # Example generated image
-├── variation_1.png      # Example variation
-├── variation_2.png      # Example variation
-├── .env                 # (Ignored) API key storage
-├── .gitignore           # Ensures clean repo
-└── venv/                # Virtual environment (ignored)
+├── images/
+│   ├── dragon.png
+│   ├── mask.png
+│   ├── canvas.png
+│   ├── mask_big_fixed.png
+│   └── (all output images saved here)
+│
+└── scripts/
+    ├── generate.py
+    ├── vary.py
+    ├── edit_inpaint.py
+    ├── edit_outpaint.py
+    ├── fix_mask_big.py   # optional
+    └── __init__.py
 ```
 
 ---
 
-## 🛑 Ignored Files
+# 📝 Script Explanations
 
-`materials-openai-dalle/`
-→ Tutorial sample files; not part of this project
+## 🎨 **1. generate.py — Create the base dragon image**
 
-`.env`
-→ Keeps API key private
+* Loads `.env`
+* Sends your text prompt to `gpt-image-1`
+* Saves output to `/images/dragon.png`
 
-`venv/`
-→ Virtual environment; not for GitHub
+Example output:
+
+```
+images/dragon.png
+```
+
+---
+
+## 🔁 **2. vary.py — Create stylistic variations**
+
+* Loads `/images/dragon.png`
+* Requests 2 alternative versions
+* Saves:
+
+```
+images/dragon_variation_1.png
+images/dragon_variation_2.png
+```
+
+---
+
+## 🎯 **3. edit_inpaint.py — Tattoo inpainting**
+
+Uses `mask.png` where:
+
+* **White = editable**
+* **Transparent = untouched**
+
+Adds:
+
+* Celtic knotwork tattoos
+* Runes
+* Tribal patterns
+* Chest piece, sleeves, tail patterns
+
+Outputs:
+
+```
+images/tattoo_inpaint_1.png
+images/tattoo_inpaint_2.png
+```
+
+---
+
+## 🌄 **4. edit_outpaint.py — Expand the whole scene**
+
+Uses:
+
+* `canvas.png` — a larger canvas with dragon centered
+* `mask_big_fixed.png` — transparent outside, white around edges
+
+Adds:
+
+* Extended scene
+* Glasgow skyline
+* Sunset colour palette
+* Preserves tattoos
+
+Output:
+
+```
+images/tattoo_outpaint.png
+```
+
+---
+
+## 🛠️ **5. fix_mask_big.py — Ensure mask transparency**
+
+Fixes:
+
+```
+Invalid mask image format - mask image missing alpha channel
+```
+
+Produces:
+
+```
+images/mask_big_fixed.png
+```
+
+---
+
+# 🧪 Recommended Full Workflow
+
+1. Generate base dragon
+   `python3 scripts/generate.py`
+
+2. Create artistic variations
+   `python3 scripts/vary.py`
+
+3. Add tattoos using inpainting
+   `python3 scripts/edit_inpaint.py`
+
+4. Expand to full environmental scene
+   `python3 scripts/edit_outpaint.py`
+
+---
+
+# 🛑 Ignored Items
+
+```
+.env
+venv/
+materials-openai-dalle/
+__pycache__/
+```
+
