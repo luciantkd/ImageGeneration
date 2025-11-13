@@ -134,9 +134,3 @@ ImageGeneration/
 
 `venv/`
 → Virtual environment; not for GitHub
-
----
-
-
-Or if you want a **screenshot preview** section showing `dragon.png`, I can add that too.
-```
